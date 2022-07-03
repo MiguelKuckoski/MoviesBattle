@@ -11,4 +11,5 @@ public interface GameRepository extends JpaRepository<Game, String> {
 
     @Query("SELECT g FROM Game g where g.endedAt IS NULL AND g.user = :user")
     Optional<Game> getCurrentGameByUser(User user);
+
 }

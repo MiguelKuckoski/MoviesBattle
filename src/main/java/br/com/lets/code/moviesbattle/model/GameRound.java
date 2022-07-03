@@ -44,20 +44,16 @@ public class GameRound {
         this.roundId = roundId;
     }
 
-    public String getIdMOovie1() {
-        return idMovie1;
-    }
-
-    public void setIdMovie1(String idMOovie1) {
-        this.idMovie1 = idMOovie1;
+    public void setIdMovie1(String idMovie1) {
+        this.idMovie1 = idMovie1;
     }
 
     public String getIdMovie2() {
         return idMovie2;
     }
 
-    public void setIdMovie2(String idMOovie2) {
-        this.idMovie2 = idMOovie2;
+    public void setIdMovie2(String idMovie2) {
+        this.idMovie2 = idMovie2;
     }
 
     public Game getGame() {

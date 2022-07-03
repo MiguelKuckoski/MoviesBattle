@@ -7,41 +7,96 @@ import br.com.lets.code.moviesbattle.model.GameRound;
 import br.com.lets.code.moviesbattle.model.User;
 import br.com.lets.code.moviesbattle.repository.GameRoundRepository;
 import br.com.lets.code.moviesbattle.service.GameRoundService;
+import br.com.lets.code.moviesbattle.service.MovieService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
+@Service
 public class GameRoundServiceImpl implements GameRoundService {
 
     private GameRoundRepository gameRoundRepository;
 
+    private MovieService movieService;
+    public GameRoundServiceImpl(GameRoundRepository gameRoundRepository, MovieService movieService) {
+        this.gameRoundRepository = gameRoundRepository;
+        this.movieService = movieService;
+        startMoviesList();
+    }
+
+    private List<Movie> moviesList;
+
+    private void startMoviesList() {
+        moviesList = movieService.getMovies();
+    }
+
     @Override
     public Optional<GameRound> getCurrentRound(Game game) {
         GameRound gameRound = gameRoundRepository.getCurrentRoundByGame(game);
-        return Optional.of(gameRound);
+        return Optional.ofNullable(gameRound);
     }
 
     @Override
-    public GameRoundDto getNewGameRound() {
-        return new GameRoundDto(); //TODO
+    public GameRound getNewGameRound(Game game) {
+        GameRound validGameRound = null;
+        do{
+            GameRound gameRound = newRandomRound();
+            if(!gameRound.getIdMovie1().equals(gameRound.getIdMovie2())) {
+                Optional<GameRound> hasCurrentMoviesGameCombination =
+                        gameRoundRepository.hasCurrentMoviesGameCombination(game,
+                                gameRound.getIdMovie1(),
+                                gameRound.getIdMovie2());
+
+                if(!hasCurrentMoviesGameCombination.isPresent()) {
+                    validGameRound = gameRound;
+                }
+            }
+        }while(validGameRound == null);
+        fillGameRound(validGameRound, game);
+
+        gameRoundRepository.save(validGameRound);
+
+        return validGameRound;
     }
 
-    @Override
-    public void saveNewGameRound(GameRoundDto gameRoundDto, Game game) {
+    private void fillGameRound(GameRound validGameRound, Game game) {
+        validGameRound.setGame(game);
+
+        Movie movie1 = movieService.getMovieById(validGameRound.getIdMovie1());
+        Movie movie2 = movieService.getMovieById(validGameRound.getIdMovie2());
+
+        String correctAwnser = getBiggerRating(movie1, movie2);
+        validGameRound.setCorrectAwnser(correctAwnser);
+    }
+
+    private GameRound  newRandomRound() {
+
         GameRound gameRound = new GameRound();
-        gameRound.setGame(game);
-//        gameRound.setIdMovie1(gameRoundDto.getMovie1().getImdbID());
-//        gameRound.setIdMovie2(gameRoundDto.getMovie2().getImdbID());
+        Movie movie1 = getRandomMovie();
+        Movie movie2 = getRandomMovie();
 
-//        String correctAwnser = getBiggerRating(gameRoundDto.getMovie1(), gameRoundDto.getMovie2());
-//        gameRound.setCorrectAwnser(correctAwnser);
+        gameRound.setIdMovie1(movie1.getImdbID());
+        gameRound.setNameMovie1(movie1.getTitle());
 
-        gameRoundRepository.save(gameRound);
+        gameRound.setIdMovie2(movie2.getImdbID());
+        gameRound.setNameMovie2(movie2.getTitle());
+        return gameRound;
+    }
+
+    public Movie getRandomMovie() {
+        Random rand = new Random();
+        return moviesList.get(rand.nextInt(moviesList.size()));
     }
 
     private String getBiggerRating(Movie movie1, Movie movie2) {
-        Double rattingMovie1 = movie1.getImdbVotes() * movie1.getImdbRating();
-        Double rattingMovie2 = movie2.getImdbVotes() * movie2.getImdbRating();
+        String votesMovie1 = movie1.getImdbVotes() == null? "0" : movie1.getImdbVotes().replace(",", ".");
+        String votesMovie2 = movie2.getImdbVotes() == null? "0" : movie2.getImdbVotes().replace(",", ".");
+
+        Double rattingMovie1 = Double.parseDouble(votesMovie1) * movie1.getImdbRating();
+        Double rattingMovie2 = Double.parseDouble(votesMovie2) * movie2.getImdbRating();
 
         if(rattingMovie1 > rattingMovie2) {
             return movie1.getImdbID();
@@ -68,7 +123,8 @@ public class GameRoundServiceImpl implements GameRoundService {
         return gameRoundDto;
     }
 
-    private Optional<GameRound> getOpenRoundByid(String roundId) {
+    private Optional<GameRound> getOpenRoundByid(String roundIdStr) {
+        Long roundId = Long.valueOf(roundIdStr);
         return gameRoundRepository.getOpenRoundByid(roundId);
     }
 

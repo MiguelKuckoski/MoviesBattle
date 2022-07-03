@@ -14,7 +14,6 @@ public class Game {
     @JoinColumn(name = "user_id")
     private User user;
     private LocalDateTime startedAt;
-
     private LocalDateTime endedAt;
     private Integer points;
     private Integer wrongAnswersCounter;
@@ -51,6 +50,9 @@ public class Game {
     }
 
     public Integer getPoints() {
+        if(points == null) {
+            points = 0;
+        }
         return points;
     }
 
@@ -59,6 +61,9 @@ public class Game {
     }
 
     public Integer getWrongAnswersCounter() {
+        if(wrongAnswersCounter == null) {
+            wrongAnswersCounter = 0;
+        }
         return wrongAnswersCounter;
     }
 

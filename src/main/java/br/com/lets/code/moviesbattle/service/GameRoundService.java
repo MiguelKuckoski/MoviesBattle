@@ -10,9 +10,7 @@ import java.util.Optional;
 public interface GameRoundService {
     Optional<GameRound> getCurrentRound(Game game);
 
-    GameRoundDto getNewGameRound();
-
-    void saveNewGameRound(GameRoundDto gameRoundDto, Game game);
+    GameRound getNewGameRound(Game game);
 
     GameRoundDto gameRoundToDto(GameRound gameRound);
 

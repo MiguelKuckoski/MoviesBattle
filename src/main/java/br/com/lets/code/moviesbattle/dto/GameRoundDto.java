@@ -28,7 +28,7 @@ public class GameRoundDto implements Serializable {
         return movie2;
     }
 
-    public void setMovie2(Movie Movie) {
+    public void setMovie2(Movie movie2) {
         this.movie2 = movie2;
     }
 }
