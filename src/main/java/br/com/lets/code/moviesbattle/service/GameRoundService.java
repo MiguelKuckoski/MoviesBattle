@@ -1,6 +1,7 @@
 package br.com.lets.code.moviesbattle.service;
 
-import br.com.lets.code.moviesbattle.dto.GameRoundDto;
+import br.com.lets.code.moviesbattle.dto.restApi.GameAwnserApi;
+import br.com.lets.code.moviesbattle.dto.restApi.GameRoundApi;
 import br.com.lets.code.moviesbattle.model.Game;
 import br.com.lets.code.moviesbattle.model.GameRound;
 import br.com.lets.code.moviesbattle.model.User;
@@ -12,9 +13,9 @@ public interface GameRoundService {
 
     GameRound getNewGameRound(Game game);
 
-    GameRoundDto gameRoundToDto(GameRound gameRound);
+    GameRoundApi gameRoundToDto(GameRound gameRound);
 
-    GameRound validateRoundParams(String roundId, User user, String awnser);
+    GameRound validateRoundParams(GameAwnserApi gameAwnserApi, User user);
 
-    Boolean validateRoundAwnser(GameRound gameRound, String awnser);
+    Boolean validateRoundAwnser(GameRound gameRound, GameAwnserApi gameAwnserApi);
 }

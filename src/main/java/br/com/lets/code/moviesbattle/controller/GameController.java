@@ -1,11 +1,15 @@
 package br.com.lets.code.moviesbattle.controller;
 
-import br.com.lets.code.moviesbattle.dto.GameRoundDto;
+import br.com.lets.code.moviesbattle.dto.restApi.GameAwnserApi;
+import br.com.lets.code.moviesbattle.dto.restApi.GameRoundApi;
 import br.com.lets.code.moviesbattle.service.GameService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/game/")
@@ -17,16 +21,29 @@ public class GameController {
         this.gameService = gameService;
     }
 
+    @Operation(summary = "Get a new or current game round.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Round info.",
+            content = { @Content(mediaType = "application/json",
+                schema = @Schema(implementation = GameRoundApi.class)),
+            })
+    })
     @GetMapping(value = "play")
-    public ResponseEntity<GameRoundDto> playGame() {
-        GameRoundDto gameRound = gameService.playGame();
+    public ResponseEntity<GameRoundApi> playGame() {
+        GameRoundApi gameRound = gameService.playGame();
         return ResponseEntity.ok().body(gameRound);
     }
 
+    @Operation(summary = "Awnser a game round.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reports the result of the round",
+                    content = { @Content(mediaType = "Text",
+                            schema = @Schema(implementation = String.class)) })
+    })
     @PostMapping(value = "awnser")
-    public ResponseEntity<String> awnserGame(@RequestBody Map<String, Object> awnser) {
+    public ResponseEntity<String> awnserGame(@RequestBody GameAwnserApi gameAwnser) {
         try {
-            boolean correctAwnser = gameService.awnserRound(awnser);
+            boolean correctAwnser = gameService.awnserRound(gameAwnser);
             String response = "Request play to a new round";
             if(correctAwnser) {
                 response = "Correct awnser, +1 point. " + response;
@@ -39,6 +56,12 @@ public class GameController {
         }
     }
 
+    @Operation(summary = "Quit the current game if exists.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reports the status of request",
+                    content = { @Content(mediaType = "Text",
+                            schema = @Schema(implementation = String.class)) })
+    })
     @GetMapping(value = "quit")
     public ResponseEntity<String> quitGame() {
         boolean gameEnded = gameService.quitGame();
@@ -51,6 +74,13 @@ public class GameController {
         return ResponseEntity.ok().body(response);
     }
 
+
+    @Operation(summary = "Get ranking of all players.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get ranking response",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)) })
+    })
     @GetMapping(value = "rank")
     public ResponseEntity getRanks() {
         //TODO

@@ -1,7 +1,9 @@
 package br.com.lets.code.moviesbattle.service.impl;
 
-import br.com.lets.code.moviesbattle.dto.GameRoundDto;
 import br.com.lets.code.moviesbattle.dto.Movie;
+import br.com.lets.code.moviesbattle.dto.restApi.GameAwnserApi;
+import br.com.lets.code.moviesbattle.dto.restApi.GameRoundApi;
+import br.com.lets.code.moviesbattle.dto.restApi.MovieApi;
 import br.com.lets.code.moviesbattle.model.Game;
 import br.com.lets.code.moviesbattle.model.GameRound;
 import br.com.lets.code.moviesbattle.model.User;
@@ -106,21 +108,21 @@ public class GameRoundServiceImpl implements GameRoundService {
     }
 
     @Override
-    public GameRoundDto gameRoundToDto(GameRound gameRound) {
-        GameRoundDto gameRoundDto = new GameRoundDto();
-        gameRoundDto.setRoundId(gameRound.getRoundId());
+    public GameRoundApi gameRoundToDto(GameRound gameRound) {
+        GameRoundApi gameRoundApi = new GameRoundApi();
+        gameRoundApi.setRoundId(gameRound.getRoundId());
 
-        Movie movie1 = new Movie();
+        MovieApi movie1 = new MovieApi();
         movie1.setTitle(gameRound.getNameMovie1());
         movie1.setImdbID(gameRound.getIdMovie1());
-        gameRoundDto.setMovie1(movie1);
+        gameRoundApi.setMovie1(movie1);
 
-        Movie movie2 = new Movie();
+        MovieApi movie2 = new MovieApi();
         movie2.setTitle(gameRound.getNameMovie2());
         movie2.setImdbID(gameRound.getIdMovie2());
-        gameRoundDto.setMovie2(movie2);
+        gameRoundApi.setMovie2(movie2);
 
-        return gameRoundDto;
+        return gameRoundApi;
     }
 
     private Optional<GameRound> getOpenRoundByid(String roundIdStr) {
@@ -129,9 +131,9 @@ public class GameRoundServiceImpl implements GameRoundService {
     }
 
     @Override
-    public GameRound validateRoundParams(String roundId, User user, String awnser) {
-        if(roundId != null && awnser != null) {
-            Optional<GameRound> gameRound = getOpenRoundByid(roundId);
+    public GameRound validateRoundParams(GameAwnserApi gameAwnserApi, User user) {
+        if(gameAwnserApi.getRoundId() != null && gameAwnserApi.getAwnser() != null) {
+            Optional<GameRound> gameRound = getOpenRoundByid(gameAwnserApi.getRoundId());
             if(gameRound.isPresent()) {
                 if (gameRound.get().getGame().getUser().getId().equals(user.getId())) {
                     return gameRound.get();
@@ -147,12 +149,12 @@ public class GameRoundServiceImpl implements GameRoundService {
     }
 
     @Override
-    public Boolean validateRoundAwnser(GameRound gameRound, String awnser) {
+    public Boolean validateRoundAwnser(GameRound gameRound, GameAwnserApi gameAwnserApi) {
         Boolean isCorrectAwnser = false;
         Game game = gameRound.getGame();
-        gameRound.setUserAwnser(awnser);
+        gameRound.setUserAwnser(gameAwnserApi.getAwnser());
 
-        if (!gameRound.getCorrectAwnser().equals(awnser)){
+        if (!gameRound.getCorrectAwnser().equals(gameAwnserApi.getAwnser())){
             Integer countError = game.getWrongAnswersCounter() +1;
             game.setWrongAnswersCounter(countError);
 

@@ -1,13 +1,14 @@
 package br.com.lets.code.moviesbattle.service;
 
-import br.com.lets.code.moviesbattle.dto.GameRoundDto;
+import br.com.lets.code.moviesbattle.dto.restApi.GameAwnserApi;
+import br.com.lets.code.moviesbattle.dto.restApi.GameRoundApi;
 
 import java.util.Map;
 
 public interface GameService {
 
-    public GameRoundDto playGame();
-    public Boolean awnserRound(Map<String, Object> awnser);
+    public GameRoundApi playGame();
+    public Boolean awnserRound(GameAwnserApi gameAwnserApi);
     public Boolean quitGame();
 
 }

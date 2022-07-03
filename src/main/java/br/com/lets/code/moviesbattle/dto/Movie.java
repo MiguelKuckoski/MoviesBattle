@@ -1,11 +1,9 @@
 package br.com.lets.code.moviesbattle.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Movie implements Serializable {
 
     @JsonAlias("Title")

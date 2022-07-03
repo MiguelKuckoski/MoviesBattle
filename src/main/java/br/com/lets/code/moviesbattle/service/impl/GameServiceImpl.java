@@ -1,6 +1,7 @@
 package br.com.lets.code.moviesbattle.service.impl;
 
-import br.com.lets.code.moviesbattle.dto.GameRoundDto;
+import br.com.lets.code.moviesbattle.dto.restApi.GameAwnserApi;
+import br.com.lets.code.moviesbattle.dto.restApi.GameRoundApi;
 import br.com.lets.code.moviesbattle.model.Game;
 import br.com.lets.code.moviesbattle.model.GameRound;
 import br.com.lets.code.moviesbattle.model.User;
@@ -34,23 +35,23 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameRoundDto playGame() {
+    public GameRoundApi playGame() {
         User user = getLoggerUser();
         Game game = getUserGame(user);
         return getGameRound(game);
     }
 
-    private GameRoundDto getGameRound(Game game) {
-        GameRoundDto gameRoundDto;
+    private GameRoundApi getGameRound(Game game) {
+        GameRoundApi gameRoundApi;
 
         Optional<GameRound> currentGameRound = gameRoundService.getCurrentRound(game);
         if(currentGameRound.isPresent()) {
-            gameRoundDto = gameRoundService.gameRoundToDto(currentGameRound.get());
+            gameRoundApi = gameRoundService.gameRoundToDto(currentGameRound.get());
         } else {
             GameRound gameRound = gameRoundService.getNewGameRound(game);
-            gameRoundDto = gameRoundService.gameRoundToDto(gameRound);
+            gameRoundApi = gameRoundService.gameRoundToDto(gameRound);
         }
-        return gameRoundDto;
+        return gameRoundApi;
     }
 
     private Game getUserGame(User user) {
@@ -66,12 +67,10 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Boolean awnserRound(Map<String, Object> playerAwnser) {
-        String roundId = (String) playerAwnser.get("roundId");
-        String awnser = (String) playerAwnser.get("awnser");
+    public Boolean awnserRound(GameAwnserApi gameAwnserApi) {
         User user = getLoggerUser();
-        GameRound gameRound= gameRoundService.validateRoundParams(roundId, user, awnser);
-        return gameRoundService.validateRoundAwnser(gameRound, awnser);
+        GameRound gameRound= gameRoundService.validateRoundParams(gameAwnserApi, user);
+        return gameRoundService.validateRoundAwnser(gameRound, gameAwnserApi);
     }
 
     @Override

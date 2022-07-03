@@ -32,6 +32,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
