@@ -5,6 +5,7 @@ import br.com.lets.code.moviesbattle.service.MovieService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.file.Files;
@@ -52,10 +53,15 @@ public class OmdbMovieServiceImpl implements MovieService {
         List<String> movies = Arrays.asList("Batman", "Superman"); //getMoviesList();
         List<Movie> listMovies = new ArrayList<>();
         if(movies != null) {
-            listMovies = movies.parallelStream()
-                    .map(this::consultApiMovies)
-                    .flatMap(List::stream)
-                    .toList();
+            try {
+                listMovies = movies.parallelStream()
+                        .map(this::consultApiMovies)
+                        .flatMap(List::stream)
+                        .toList();
+            }catch (ResourceAccessException e) {
+                System.out.println(e.toString());
+            }
+
         }
         return listMovies;
     }

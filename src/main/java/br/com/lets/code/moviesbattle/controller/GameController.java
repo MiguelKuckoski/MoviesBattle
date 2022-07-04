@@ -74,16 +74,4 @@ public class GameController {
         return ResponseEntity.ok().body(response);
     }
 
-
-    @Operation(summary = "Get ranking of all players.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get ranking response",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) })
-    })
-    @GetMapping(value = "rank")
-    public ResponseEntity getRanks() {
-        //TODO
-        return ResponseEntity.accepted().build();
-    }
 }

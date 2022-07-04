@@ -4,9 +4,11 @@ import br.com.lets.code.moviesbattle.model.Game;
 import br.com.lets.code.moviesbattle.model.GameRound;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface GameRoundRepository extends JpaRepository<GameRound, String> {
 
     @Query("SELECT gr FROM GameRound gr WHERE gr.userAwnser IS NULL AND gr.game = :game")

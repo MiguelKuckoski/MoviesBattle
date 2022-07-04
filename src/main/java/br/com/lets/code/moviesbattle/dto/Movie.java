@@ -56,7 +56,10 @@ public class Movie implements Serializable {
     }
 
     public String getImdbVotes() {
-        return imdbVotes;
+        if(imdbVotes == null) {
+            imdbVotes = "0";
+        }
+        return imdbVotes.replace(".", "").replace(",", ".");
     }
 
     public void setImdbVotes(String imdbVotes) {
