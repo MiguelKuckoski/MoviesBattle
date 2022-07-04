@@ -22,7 +22,7 @@ public class Game {
     private List<GameRound> rounds;
 
     public Game() {
-        this.startedAt = LocalDateTime.now();
+        setStartedAt(LocalDateTime.now());
     }
 
     public Long getId() {

@@ -52,7 +52,7 @@ public class GameController {
             }
             return ResponseEntity.ok().body(response);
         }catch (Exception e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

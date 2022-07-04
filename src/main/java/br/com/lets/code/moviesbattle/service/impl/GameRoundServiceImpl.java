@@ -94,11 +94,8 @@ public class GameRoundServiceImpl implements GameRoundService {
     }
 
     private String getBiggerRating(Movie movie1, Movie movie2) {
-        String votesMovie1 = movie1.getImdbVotes() == null? "0" : movie1.getImdbVotes().replace(",", ".");
-        String votesMovie2 = movie2.getImdbVotes() == null? "0" : movie2.getImdbVotes().replace(",", ".");
-
-        Double rattingMovie1 = Double.parseDouble(votesMovie1) * movie1.getImdbRating();
-        Double rattingMovie2 = Double.parseDouble(votesMovie2) * movie2.getImdbRating();
+        Double rattingMovie1 = Double.parseDouble(movie1.getImdbVotes()) * movie1.getImdbRating();
+        Double rattingMovie2 = Double.parseDouble(movie2.getImdbVotes()) * movie2.getImdbRating();
 
         if(rattingMovie1 > rattingMovie2) {
             return movie1.getImdbID();

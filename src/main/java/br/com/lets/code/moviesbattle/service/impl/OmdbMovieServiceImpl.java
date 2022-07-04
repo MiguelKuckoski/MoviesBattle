@@ -50,7 +50,7 @@ public class OmdbMovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getMovies() {
-        List<String> movies = Arrays.asList("Batman", "Superman"); //getMoviesList();
+        List<String> movies = Arrays.asList("Batman", "Superman");
         List<Movie> listMovies = new ArrayList<>();
         if(movies != null) {
             try {
@@ -70,18 +70,4 @@ public class OmdbMovieServiceImpl implements MovieService {
     public Movie getMovieById(String idMovie1) {
         return getMovieByIdApi(idMovie1);
     }
-
-    private List<String> getMoviesList() {
-        List<String> moviesList;
-        try {
-            String movies = Files.readString(Paths.get(getClass().getResource("moviesList.txt").toURI()));
-            String [] arrMovies = movies.split(",");
-            moviesList = Arrays.asList(arrMovies);
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-
-        return moviesList;
-    }
-
 }

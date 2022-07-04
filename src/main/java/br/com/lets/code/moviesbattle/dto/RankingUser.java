@@ -8,6 +8,10 @@ public class RankingUser implements Serializable {
     private String username;
     private Integer percentHits;
 
+    public RankingUser() {
+
+    }
+
     public RankingUser(Long idUser, String username, Integer percentHits) {
         this.idUser = idUser;
         this.username = username;
